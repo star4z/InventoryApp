@@ -40,11 +40,7 @@ public class AddItemActivity extends AppCompatActivity {
             } catch (NumberFormatException e) {
                 item.barcode = -1;
             }
-            try {
-                item.qr = Integer.valueOf(qrCode.getText().toString());
-            } catch (NumberFormatException e) {
-                item.qr = -1;
-            }
+            item.qr = qrCode.getText().toString();
             item.name = name.getText().toString();
             item.type = type.getText().toString();
             try {
