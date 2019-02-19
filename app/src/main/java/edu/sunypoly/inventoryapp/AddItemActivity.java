@@ -59,6 +59,7 @@ public class AddItemActivity extends AppCompatActivity {
 
             Log.v("AddItemActivity", output);
 
+
             message.setText(output);
         } else {
             Toast.makeText(this, "Item must at least have a name", Toast.LENGTH_LONG)

@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     String username;
     String password;
 
+    boolean loggedIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +27,7 @@ public class MainActivity extends AppCompatActivity {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         username = prefs.getString("username", null);
         password = prefs.getString("password", null);
-
-
+        loggedIn = false;
     }
 
     private void loginToServer() throws IOException {

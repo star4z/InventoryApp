@@ -10,4 +10,19 @@ class InventoryItem {
     public String room;
     public String brand;
     public String acquired;
+
+    @Override
+    public String toString() {
+        return "InventoryItem{" +
+                "id=" + id +
+                ", barcode=" + barcode +
+                ", qr='" + qr + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", serial=" + serial +
+                ", room='" + room + '\'' +
+                ", brand='" + brand + '\'' +
+                ", acquired='" + acquired + '\'' +
+                '}';
+    }
 }
