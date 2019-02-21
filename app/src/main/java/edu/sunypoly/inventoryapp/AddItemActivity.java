@@ -20,37 +20,37 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     void onAdd(View view) {
-        TextView barcode = findViewById(R.id.barcode_display);
-        TextView qrCode = findViewById(R.id.qr_display);
-        EditText name = findViewById(R.id.editText);
-        EditText type = findViewById(R.id.editText2);
-        EditText serial = findViewById(R.id.editText3);
-        EditText room = findViewById(R.id.editText4);
-        EditText brand = findViewById(R.id.editText5);
-        EditText acquired = findViewById(R.id.editText6);
+        TextView barcodeView = findViewById(R.id.barcode_display);
+        TextView qrCodeView = findViewById(R.id.qr_display);
+        EditText nameView = findViewById(R.id.editText);
+        EditText typeView = findViewById(R.id.editText2);
+        EditText serialView = findViewById(R.id.editText3);
+        EditText roomView = findViewById(R.id.editText4);
+        EditText brandView = findViewById(R.id.editText5);
+        EditText acquiredView = findViewById(R.id.editText6);
 
         TextView message = findViewById(R.id.message);
 
 
-        if (name.getText().toString().length() > 0) {
+        if (nameView.getText().toString().length() > 0) {
             InventoryItem item = new InventoryItem();
             item.id = generateId();
             try {
-                item.barcode = Integer.valueOf(barcode.getText().toString());
+                item.barcode = Integer.valueOf(barcodeView.getText().toString());
             } catch (NumberFormatException e) {
                 item.barcode = -1;
             }
-            item.qr = qrCode.getText().toString();
-            item.name = name.getText().toString();
-            item.type = type.getText().toString();
+            item.qr = qrCodeView.getText().toString();
+            item.name = nameView.getText().toString();
+            item.type = typeView.getText().toString();
             try {
-                item.serial = Integer.valueOf(serial.getText().toString());
+                item.serial = Integer.valueOf(serialView.getText().toString());
             } catch (NumberFormatException e){
                 item.serial = -1;
             }
-            item.room = room.getText().toString();
-            item.brand = brand.getText().toString();
-            item.acquired = acquired.getText().toString();
+            item.room = roomView.getText().toString();
+            item.brand = brandView.getText().toString();
+            item.acquired = acquiredView.getText().toString();
 
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();

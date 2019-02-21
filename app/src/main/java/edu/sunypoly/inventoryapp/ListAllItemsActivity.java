@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class ListAllItemsActivity extends AppCompatActivity {
 
@@ -22,20 +23,31 @@ public class ListAllItemsActivity extends AppCompatActivity {
 
         inventoryItems = getItems();
 
-        recyclerView = findViewById(R.id.recycler_view);
+        if (inventoryItems != null) {
 
-        recyclerView.setHasFixedSize(true);
+            recyclerView = findViewById(R.id.recycler_view);
 
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setHasFixedSize(true);
 
-        mAdapter = new ItemRecyclerAdapter(inventoryItems);
-        recyclerView.setAdapter(mAdapter);
+            layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+
+            mAdapter = new ItemRecyclerAdapter(inventoryItems);
+            recyclerView.setAdapter(mAdapter);
+        }
     }
 
     private ArrayList<InventoryItem> getItems(){
         Authenticator authenticator = new Authenticator(this);
         authenticator.login("", "");
-        return authenticator.getItems();
+        try {
+            return new ReadFilesTask().execute(authenticator).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
