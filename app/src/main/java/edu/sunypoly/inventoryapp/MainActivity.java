@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void login(View vew){
-
+        startActivityForResult(new Intent(this, LoginActivity.class), 0);
     }
 
     public void listAll(View view){

@@ -27,7 +27,10 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder itemViewHolder, int i) {
-        itemViewHolder.itemTextView.setText(mDataset.get(i).toString());
+        InventoryItem item = mDataset.get(i);
+        String line = "Name: " + item.getName() + "\n\tRoom: " + item.getRoom() +
+                "\n\tAsset tag: " + item.getBarcode();
+        itemViewHolder.itemTextView.setText(line);
         itemViewHolder.inventoryItem = mDataset.get(i);
     }
 

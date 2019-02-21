@@ -1,6 +1,7 @@
 package edu.sunypoly.inventoryapp;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -51,6 +52,9 @@ public class Authenticator {
 
                 Gson gson = new GsonBuilder().create();
                 String json = gson.toJson(item);
+
+                Log.v("AddItemActivity", json);
+
 
                 httpURLConnection.setDoOutput(true);
                 DataOutputStream out = new DataOutputStream(httpURLConnection.getOutputStream());

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -21,6 +22,13 @@ public class ListAllItemsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_all_items);
 
+
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
         inventoryItems = getItems();
 
         if (inventoryItems != null) {
@@ -34,6 +42,8 @@ public class ListAllItemsActivity extends AppCompatActivity {
 
             mAdapter = new ItemRecyclerAdapter(inventoryItems);
             recyclerView.setAdapter(mAdapter);
+        } else {
+            Toast.makeText(this, "No items to display.", Toast.LENGTH_LONG).show();
         }
     }
 

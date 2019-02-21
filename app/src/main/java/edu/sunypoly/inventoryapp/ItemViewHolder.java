@@ -1,9 +1,11 @@
 package edu.sunypoly.inventoryapp;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -27,8 +29,12 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (inventoryItem != null) {
+                    Bundle bundle = inventoryItem.toBundle();
+
+                    Log.d(getClass().getSimpleName(), bundle.toString());
+
                     itemView.getContext().startActivity(new Intent(itemView.getContext(),
-                            AddItemActivity.class));
+                            AddItemActivity.class), inventoryItem.toBundle());
                 } else {
                     Toast.makeText(itemView.getContext(), "Can't edit, item is null.",
                             Toast.LENGTH_LONG).show();
