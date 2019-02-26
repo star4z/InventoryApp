@@ -25,13 +25,13 @@ class InventoryItem {
     public static final String BRAND = "brand";
     public static final String ACQUIRED = "acquired";
 
-    private HashMap<String, String> fieldsMap;
+//    private HashMap<String, String> fieldsMap;
 
-    public static final String[] fields = new String[]{ID, BARCODE, QR, NAME, TYPE, SERIAL, ROOM,
-            BRAND, ACQUIRED};
+//    public static final String[] fields = new String[]{ID, BARCODE, QR, NAME, TYPE, SERIAL, ROOM,
+//            BRAND, ACQUIRED};
 
     public InventoryItem(){
-        fieldsMap = new HashMap<>();
+//        fieldsMap = new HashMap<>();
     }
 
     public InventoryItem(final int id, final int barcode, final String qr, final String name,
@@ -47,17 +47,17 @@ class InventoryItem {
         this.brand = brand;
         this.acquired = acquired;
 
-        fieldsMap = new HashMap<String, String>(){{
-            put(ID, "" + id);
-            put(BARCODE, "" + barcode);
-            put(QR, qr);
-            put(NAME, name);
-            put(TYPE, type);
-            put(SERIAL, "" + serial);
-            put(ROOM, room);
-            put(BRAND, brand);
-            put(ACQUIRED, acquired);
-        }};
+//        fieldsMap = new HashMap<String, String>(){{
+//            put(ID, "" + id);
+//            put(BARCODE, "" + barcode);
+//            put(QR, qr);
+//            put(NAME, name);
+//            put(TYPE, type);
+//            put(SERIAL, "" + serial);
+//            put(ROOM, room);
+//            put(BRAND, brand);
+//            put(ACQUIRED, acquired);
+//        }};
     }
 
     public int getId() {
@@ -66,7 +66,7 @@ class InventoryItem {
 
     public void setId(int id) {
         this.id = id;
-        fieldsMap.put(ID, "" + id);
+//        fieldsMap.put(ID, "" + id);
     }
 
     public int getBarcode() {
@@ -75,7 +75,7 @@ class InventoryItem {
 
     public void setBarcode(int barcode) {
         this.barcode = barcode;
-        fieldsMap.put(BARCODE, "" + barcode);
+//        fieldsMap.put(BARCODE, "" + barcode);
     }
 
     public String getQr() {
@@ -84,7 +84,7 @@ class InventoryItem {
 
     public void setQr(String qr) {
         this.qr = qr;
-        fieldsMap.put(QR, qr);
+//        fieldsMap.put(QR, qr);
     }
 
     public String getName() {
@@ -93,7 +93,7 @@ class InventoryItem {
 
     public void setName(String name) {
         this.name = name;
-        fieldsMap.put(NAME, name);
+//        fieldsMap.put(NAME, name);
     }
 
     public String getType() {
@@ -102,7 +102,7 @@ class InventoryItem {
 
     public void setType(String type) {
         this.type = type;
-        fieldsMap.put(TYPE, type);
+//        fieldsMap.put(TYPE, type);
     }
 
     public int getSerial() {
@@ -111,7 +111,7 @@ class InventoryItem {
 
     public void setSerial(int serial) {
         this.serial = serial;
-        fieldsMap.put(SERIAL, "" + serial);
+//        fieldsMap.put(SERIAL, "" + serial);
     }
 
     public String getRoom() {
@@ -120,7 +120,7 @@ class InventoryItem {
 
     public void setRoom(String room) {
         this.room = room;
-        fieldsMap.put(ROOM, room);
+//        fieldsMap.put(ROOM, room);
     }
 
     public String getBrand() {
@@ -129,7 +129,7 @@ class InventoryItem {
 
     public void setBrand(String brand) {
         this.brand = brand;
-        fieldsMap.put(BRAND, brand);
+//        fieldsMap.put(BRAND, brand);
     }
 
     public String getAcquired() {
@@ -138,7 +138,7 @@ class InventoryItem {
 
     public void setAcquired(String acquired) {
         this.acquired = acquired;
-        fieldsMap.put(ACQUIRED, acquired);
+//        fieldsMap.put(ACQUIRED, acquired);
     }
 
     @Override
@@ -172,7 +172,21 @@ class InventoryItem {
         return bundle;
     }
 
-    public String get(String fieldId){
-        return fieldsMap.get(fieldId);
+//    public String get(String fieldId){
+//        return fieldsMap.get(fieldId);
+//    }
+
+    public HashMap<String, String> getFields(){
+        return new HashMap<String, String>(){{
+            put(ID, "" + id);
+            put(BARCODE, "" + barcode);
+            put(QR, qr);
+            put(NAME, name);
+            put(TYPE, type);
+            put(SERIAL, "" + serial);
+            put(ROOM, room);
+            put(BRAND, brand);
+            put(ACQUIRED, acquired);
+        }};
     }
 }

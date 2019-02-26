@@ -21,8 +21,6 @@ public class ListAllItemsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_all_items);
-
-
     }
 
     @Override
@@ -48,16 +46,8 @@ public class ListAllItemsActivity extends AppCompatActivity {
     }
 
     private ArrayList<InventoryItem> getItems(){
-        Authenticator authenticator = new Authenticator(this);
+        Authenticator authenticator = Authenticator.getInstance();
         authenticator.login("", "");
-        try {
-            return new ReadFilesTask().execute(authenticator).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return authenticator.getItems();
     }
 }

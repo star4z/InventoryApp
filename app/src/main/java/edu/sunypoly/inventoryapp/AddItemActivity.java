@@ -1,5 +1,8 @@
 package edu.sunypoly.inventoryapp;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +13,9 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.util.HashMap;
+import java.util.Objects;
 
 public class AddItemActivity extends AppCompatActivity {
 
@@ -51,7 +57,7 @@ public class AddItemActivity extends AppCompatActivity {
             acquiredView.setText(savedInstanceState.getString(InventoryItem.ACQUIRED));
         }
 
-        authenticator = new Authenticator(this);
+        authenticator = Authenticator.getInstance();
     }
 
     void onAdd(View view) {
@@ -93,15 +99,27 @@ public class AddItemActivity extends AppCompatActivity {
 
         if (containsIllegalCharacter(item)) return;
 
-        Toast.makeText(this, "Item " + item + " generated", Toast.LENGTH_LONG).show();
+        authenticator.login("","");
 
+        ProgressDialog dialog = ProgressDialog.show(this, "Contacting server...", "Adding item: " + item);
+        boolean success = authenticator.addItem(item);
+
+        dialog.dismiss();
+
+        if (success){
+            Toast.makeText(this, "Added item.", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Could not add item.", Toast.LENGTH_LONG).show();
+        }
     }
 
     boolean containsIllegalCharacter(InventoryItem item){
-        for (String key : InventoryItem.fields) {
+        HashMap<String, String> map = item.getFields();
+
+        for (String key : map.keySet()) {
             if (!key.equals(InventoryItem.ID) && !key.equals(InventoryItem.BARCODE) &&
                     !key.equals(InventoryItem.SERIAL)) {
-                for (char c : item.get(key).toCharArray()) {
+                for (char c : Objects.requireNonNull(map.get(key)).toCharArray()) {
                     for (char d : Authenticator.ILLEGAL_CHARACTERS) {
                         if (c == d) {
                             Toast.makeText(this, "Field " + key + " cannot contain " +
@@ -126,4 +144,5 @@ public class AddItemActivity extends AppCompatActivity {
     private int generateId() {
         return -1;
     }
+
 }
