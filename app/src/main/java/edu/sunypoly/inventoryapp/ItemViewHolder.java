@@ -25,16 +25,39 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
         itemTextView = itemView.findViewById(R.id.item_text_view);
         imageButton = itemView.findViewById(R.id.edit_button);
 
+        itemTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (inventoryItem != null) {
+                    Bundle bundle = inventoryItem.toBundle();
+
+                    Log.d("ViewHolder", bundle.toString());
+
+                    Intent intent = new Intent(itemView.getContext(),
+                            TellMeMoreActivity.class);
+                    intent.putExtras(bundle);
+
+                    itemView.getContext().startActivity(intent);
+                } else {
+                    Toast.makeText(itemView.getContext(), "Can't open, item is null.",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (inventoryItem != null) {
                     Bundle bundle = inventoryItem.toBundle();
 
-                    Log.d(getClass().getSimpleName(), bundle.toString());
+                    Log.d("ViewHolder", bundle.toString());
 
-                    itemView.getContext().startActivity(new Intent(itemView.getContext(),
-                            AddItemActivity.class), inventoryItem.toBundle());
+                    Intent intent = new Intent(itemView.getContext(),
+                            AddItemActivity.class);
+                    intent.putExtras(bundle);
+
+                    itemView.getContext().startActivity(intent);
                 } else {
                     Toast.makeText(itemView.getContext(), "Can't edit, item is null.",
                             Toast.LENGTH_LONG).show();

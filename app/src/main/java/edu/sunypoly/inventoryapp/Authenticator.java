@@ -63,12 +63,15 @@ public class Authenticator {
                 return addItemsTask.get();
             } catch (ExecutionException e) {
                 e.printStackTrace();
+                Log.e(TAG, "ExecutionException " + e.getMessage());
                 return false;
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Log.e(TAG, "InterruptedException " + e.getMessage());
                 return false;
             }
         } else {
+            Log.e(TAG, "Not logged in.");
             return false;
 //            Toast.makeText(context, "You must be logged in to perform that action.",
 //                    Toast.LENGTH_LONG).show();
@@ -80,7 +83,7 @@ public class Authenticator {
         try {
             url = new URL("http://150.156.202.112:8000/inventory");
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setRequestMethod("PUT");
+            httpURLConnection.setRequestMethod("POST");
 
             Gson gson = new GsonBuilder().create();
             String json = gson.toJson(item);
@@ -97,6 +100,10 @@ public class Authenticator {
             httpURLConnection.setConnectTimeout(5000);
             httpURLConnection.setReadTimeout(5000);
 
+            String input = inputStreamToString(httpURLConnection.getInputStream());
+            Log.v(TAG, input);
+
+            return true;
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

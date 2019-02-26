@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -44,23 +46,29 @@ public class AddItemActivity extends AppCompatActivity {
         brandView = findViewById(R.id.editText5);
         acquiredView = findViewById(R.id.editText6);
 
-        Log.v(getClass().getSimpleName(), String.valueOf(savedInstanceState));
+        if (getIntent() != null) {
 
-        if (savedInstanceState != null) {
-            barcodeView.setText(Integer.toString(savedInstanceState.getInt(InventoryItem.BARCODE)));
-            qrCodeView.setText(savedInstanceState.getString(InventoryItem.QR));
-            nameView.setText(savedInstanceState.getString(InventoryItem.NAME));
-            typeView.setText(savedInstanceState.getString(InventoryItem.TYPE));
-            serialView.setText(Integer.toString(savedInstanceState.getInt(InventoryItem.SERIAL)));
-            roomView.setText(savedInstanceState.getString(InventoryItem.ROOM));
-            brandView.setText(savedInstanceState.getString(InventoryItem.BRAND));
-            acquiredView.setText(savedInstanceState.getString(InventoryItem.ACQUIRED));
+
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+
+                Log.v(getClass().getSimpleName(), Objects.requireNonNull(getIntent().getExtras()).toString());
+
+                barcodeView.setText(Integer.toString(extras.getInt(InventoryItem.BARCODE)));
+                qrCodeView.setText(extras.getString(InventoryItem.QR));
+                nameView.setText(extras.getString(InventoryItem.NAME));
+                typeView.setText(extras.getString(InventoryItem.TYPE));
+                serialView.setText(Integer.toString(extras.getInt(InventoryItem.SERIAL)));
+                roomView.setText(extras.getString(InventoryItem.ROOM));
+                brandView.setText(extras.getString(InventoryItem.BRAND));
+                acquiredView.setText(extras.getString(InventoryItem.ACQUIRED));
+            }
         }
 
         authenticator = Authenticator.getInstance();
     }
 
-    void onAdd(View view) {
+    public void onAdd(View view) {
 
 
         TextView message = findViewById(R.id.message);
@@ -81,6 +89,7 @@ public class AddItemActivity extends AppCompatActivity {
         String brand = brandView.getText().toString();
         String acquired = acquiredView.getText().toString();
 
+        ProgressDialog dialog = ProgressDialog.show(this, "Contacting server...", "Adding item");
         int id = generateId();
         int barcode = -1;
         int serial = -1;
@@ -90,6 +99,7 @@ public class AddItemActivity extends AppCompatActivity {
             if (!serialStr.isEmpty())
                 serial = Integer.valueOf(serialStr);
         } catch (NumberFormatException e) {
+            dialog.dismiss();
             Toast.makeText(this, "Encountered a number field with a string in it.",
                     Toast.LENGTH_SHORT).show();
         }
@@ -97,23 +107,25 @@ public class AddItemActivity extends AppCompatActivity {
         InventoryItem item = new InventoryItem(id, barcode, qr, name, type, serial, room, brand,
                 acquired);
 
-        if (containsIllegalCharacter(item)) return;
+        if (containsIllegalCharacter(item)) {
+            dialog.dismiss();
+            return;
+        }
 
-        authenticator.login("","");
+        authenticator.login("", "");
 
-        ProgressDialog dialog = ProgressDialog.show(this, "Contacting server...", "Adding item: " + item);
         boolean success = authenticator.addItem(item);
 
         dialog.dismiss();
 
-        if (success){
+        if (success) {
             Toast.makeText(this, "Added item.", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "Could not add item.", Toast.LENGTH_LONG).show();
         }
     }
 
-    boolean containsIllegalCharacter(InventoryItem item){
+    boolean containsIllegalCharacter(InventoryItem item) {
         HashMap<String, String> map = item.getFields();
 
         for (String key : map.keySet()) {
@@ -142,7 +154,17 @@ public class AddItemActivity extends AppCompatActivity {
      * @return unused id for use in inventory database
      */
     private int generateId() {
-        return -1;
+        Authenticator authenticator = Authenticator.getInstance();
+        authenticator.login("", "");
+        ArrayList<InventoryItem> items = authenticator.getItems();
+
+        int maxId = -1;
+        for (InventoryItem item : items){
+            if (item.getId() > maxId){
+                maxId = item.getId();
+            }
+        }
+        return maxId + 1;
     }
 
 }
