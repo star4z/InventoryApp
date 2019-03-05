@@ -2,10 +2,18 @@ package edu.sunypoly.inventoryapp;
 
 import android.os.Bundle;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 
-class InventoryItem {
-    private int id ;
+class InventoryItem implements Serializable {
+    private int id;
     private int barcode;
     private String qr;
     private String name;
@@ -30,7 +38,7 @@ class InventoryItem {
 //    public static final String[] fields = new String[]{ID, BARCODE, QR, NAME, TYPE, SERIAL, ROOM,
 //            BRAND, ACQUIRED};
 
-    public InventoryItem(){
+    public InventoryItem() {
 //        fieldsMap = new HashMap<>();
     }
 
@@ -156,7 +164,7 @@ class InventoryItem {
                 '}';
     }
 
-    public Bundle toBundle(){
+    public Bundle toBundle() {
         Bundle bundle = new Bundle();
 
         bundle.putInt(ID, id);
@@ -172,12 +180,8 @@ class InventoryItem {
         return bundle;
     }
 
-//    public String get(String fieldId){
-//        return fieldsMap.get(fieldId);
-//    }
-
-    public HashMap<String, String> getFields(){
-        return new HashMap<String, String>(){{
+    HashMap<String, String> getFields() {
+        return new HashMap<String, String>() {{
             put(ID, "" + id);
             put(BARCODE, "" + barcode);
             put(QR, qr);
@@ -188,5 +192,20 @@ class InventoryItem {
             put(BRAND, brand);
             put(ACQUIRED, acquired);
         }};
+    }
+
+    byte[] toByteArray() throws IOException {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutput out = new ObjectOutputStream(bos)) {
+            out.writeObject(this);
+            return bos.toByteArray();
+        }
+    }
+
+     static InventoryItem fromByteArray(byte[] bytes) throws IOException, ClassNotFoundException {
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+             ObjectInput in = new ObjectInputStream(bis)) {
+            return (InventoryItem) in.readObject();
+        }
     }
 }

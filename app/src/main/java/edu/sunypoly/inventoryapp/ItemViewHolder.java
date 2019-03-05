@@ -11,6 +11,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 public class ItemViewHolder extends RecyclerView.ViewHolder {
 
     ConstraintLayout itemView;
@@ -29,9 +32,13 @@ public class ItemViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (inventoryItem != null) {
-                    Bundle bundle = inventoryItem.toBundle();
+                    Bundle bundle = new Bundle();
+                    try {
+                        bundle.putByteArray("item", inventoryItem.toByteArray());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-                    Log.d("ViewHolder", bundle.toString());
 
                     Intent intent = new Intent(itemView.getContext(),
                             TellMeMoreActivity.class);

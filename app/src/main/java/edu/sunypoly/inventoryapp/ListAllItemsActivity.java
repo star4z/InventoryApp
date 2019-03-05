@@ -32,8 +32,6 @@ public class ListAllItemsActivity extends AppCompatActivity {
 
         inventoryItems = getItems();
 
-        Log.v(TAG, inventoryItems.toString());
-
         if (inventoryItems != null) {
 
             recyclerView = findViewById(R.id.recycler_view);
@@ -44,9 +42,6 @@ public class ListAllItemsActivity extends AppCompatActivity {
 
             mAdapter = new ItemRecyclerAdapter(inventoryItems);
             recyclerView.setAdapter(mAdapter);
-
-//            recyclerView.requestLayout();
-//            recyclerView.setHasFixedSize(true);
 
         } else {
             Toast.makeText(this, "No items to display.", Toast.LENGTH_LONG).show();
