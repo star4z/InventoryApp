@@ -70,9 +70,7 @@ public class AddItemActivity extends AppCompatActivity {
 
     public void onAdd(View view) {
 
-
-        TextView message = findViewById(R.id.message);
-
+        ProgressDialog dialog = ProgressDialog.show(this, "Contacting server...", "Adding item");
 
         if (!(nameView.getText().toString().length() > 0)) {
             Toast.makeText(this, "Item must at least have a name", Toast.LENGTH_LONG)
@@ -89,8 +87,8 @@ public class AddItemActivity extends AppCompatActivity {
         String brand = brandView.getText().toString();
         String acquired = acquiredView.getText().toString();
 
-        ProgressDialog dialog = ProgressDialog.show(this, "Contacting server...", "Adding item");
-        int id = generateId();
+        int id = -1; //Sending an item with an id of -1 to the database will prompt it to generate a
+        // new one.
         int barcode = -1;
         int serial = -1;
         try {
@@ -147,24 +145,4 @@ public class AddItemActivity extends AppCompatActivity {
 
         return false;
     }
-
-    /**
-     * Should check database for id values and return max(id) + 1
-     *
-     * @return unused id for use in inventory database
-     */
-    private int generateId() {
-        Authenticator authenticator = Authenticator.getInstance();
-        authenticator.login("", "");
-        ArrayList<InventoryItem> items = authenticator.getItems();
-
-        int maxId = -1;
-        for (InventoryItem item : items){
-            if (item.getId() > maxId){
-                maxId = item.getId();
-            }
-        }
-        return maxId + 1;
-    }
-
 }
