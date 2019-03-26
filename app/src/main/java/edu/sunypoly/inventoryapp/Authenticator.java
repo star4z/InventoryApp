@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 public class Authenticator {
-    private  final String TAG = this.getClass().getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
     //characters reserved by JSON and SQL standards
     static final char[] ILLEGAL_CHARACTERS = new char[]{'{', '}', '[', ']', '/', '\\', ':', '#',
             ',', '?', '&', '=', '<', '>', '(', ')', '*', '^', '!', '~', '-', '|', ';', '%'};
@@ -52,13 +52,8 @@ public class Authenticator {
 
     boolean addItem(InventoryItem item) {
         if (loggedIn) {
-//            ProgressDialog progressDialog = ProgressDialog.show(context
-//                    , "Contacting " +
-//                            "server...", "Adding item: " + item);
             AddItemsTask addItemsTask = new AddItemsTask(item);
             addItemsTask.execute(this);
-//            Toast.makeText(context, "Added item.", Toast.LENGTH_LONG)
-//                    .show();
             try {
                 return addItemsTask.get();
             } catch (ExecutionException e) {
@@ -73,8 +68,6 @@ public class Authenticator {
         } else {
             Log.e(TAG, "Not logged in.");
             return false;
-//            Toast.makeText(context, "You must be logged in to perform that action.",
-//                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -88,7 +81,7 @@ public class Authenticator {
             Gson gson = new GsonBuilder().create();
             String json = gson.toJson(item);
 
-            Log.v("AddItemActivity", json);
+            Log.v(TAG, json);
 
 
             httpURLConnection.setDoOutput(true);
@@ -139,11 +132,70 @@ public class Authenticator {
                 e.printStackTrace();
             }
         } else {
-//            Toast.makeText(context, "You must be logged in to perform that action.",
-//                    Toast.LENGTH_LONG).show();
             Log.e(TAG, "You must be logged in to perform that action.");
         }
         return null;
+    }
+
+    boolean deleteItem(InventoryItem item) {
+        if (loggedIn) {
+            DeleteItemsTask deleteItemsTask = new DeleteItemsTask();
+            deleteItemsTask.execute(item);
+            try {
+                return deleteItemsTask.get();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+                Log.e(TAG, "ExecutionException " + e.getMessage());
+                return false;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Log.e(TAG, "InterruptedException " + e.getMessage());
+                return false;
+            }
+        } else {
+            Log.e(TAG, "Not logged in.");
+            return false;
+        }
+    }
+
+    private static class DeleteItemsTask extends AsyncTask<InventoryItem, Void, Boolean> {
+        private final static String TAG = "DeleteItemsTask";
+
+        @Override
+        protected Boolean doInBackground(InventoryItem... items) {
+            URL url;
+            try {
+                url = new URL("http://150.156.202.112:8000/inventory");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("DELETE");
+
+                Gson gson = new GsonBuilder().create();
+                String json = gson.toJson(items[0]);
+
+                Log.v(TAG, json);
+
+
+                httpURLConnection.setDoOutput(true);
+                DataOutputStream out = new DataOutputStream(httpURLConnection.getOutputStream());
+                out.writeBytes(json);
+                out.flush();
+                out.close();
+
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setReadTimeout(5000);
+
+                String input = inputStreamToString(httpURLConnection.getInputStream());
+                Log.v(TAG, input);
+
+                return true;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
     }
 
     private ArrayList<InventoryItem> getItemsFromServer() {
@@ -187,4 +239,6 @@ public class Authenticator {
         }
         return result.toString();
     }
+
+
 }

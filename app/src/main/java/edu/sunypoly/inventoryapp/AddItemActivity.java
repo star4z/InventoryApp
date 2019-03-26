@@ -32,6 +32,8 @@ public class AddItemActivity extends AppCompatActivity {
 
     private Authenticator authenticator;
 
+    int id = -1; //Sending an item with id -1 to the server will prompt it to generate a new item
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +50,11 @@ public class AddItemActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
 
-
             Bundle extras = getIntent().getExtras();
             if (extras != null) {
 
                 Log.v(getClass().getSimpleName(), Objects.requireNonNull(getIntent().getExtras()).toString());
-
+                id = extras.getInt(InventoryItem.ID);
                 barcodeView.setText(Integer.toString(extras.getInt(InventoryItem.BARCODE)));
                 qrCodeView.setText(extras.getString(InventoryItem.QR));
                 nameView.setText(extras.getString(InventoryItem.NAME));
@@ -87,8 +88,7 @@ public class AddItemActivity extends AppCompatActivity {
         String brand = brandView.getText().toString();
         String acquired = acquiredView.getText().toString();
 
-        int id = -1; //Sending an item with an id of -1 to the database will prompt it to generate a
-        // new one.
+
         int barcode = -1;
         int serial = -1;
         try {

@@ -16,6 +16,14 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         mDataset = dataset;
     }
 
+    public ArrayList<InventoryItem> getmDataset() {
+        return mDataset;
+    }
+
+    public void setmDataset(ArrayList<InventoryItem> mDataset) {
+        this.mDataset = mDataset;
+    }
+
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -30,8 +38,8 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         InventoryItem item = mDataset.get(i);
         String line = "Name: " + item.getName() + "\n\tRoom: " + item.getRoom() +
                 "\n\tAsset tag: " + item.getBarcode();
-        itemViewHolder.itemTextView.setText(line);
-        itemViewHolder.inventoryItem = mDataset.get(i);
+        itemViewHolder.getItemTextView().setText(line);
+        itemViewHolder.setInventoryItem(mDataset.get(i));
     }
 
     @Override

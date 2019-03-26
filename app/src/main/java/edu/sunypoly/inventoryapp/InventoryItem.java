@@ -12,7 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 
-class InventoryItem implements Serializable {
+public class InventoryItem implements Serializable {
     private int id;
     private int barcode;
     private String qr;
