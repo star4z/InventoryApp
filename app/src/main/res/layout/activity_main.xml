@@ -9,13 +9,24 @@
 
     <Button
         android:id="@+id/login_button"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         style="@style/BasicButtonStyle"
         android:text="Login"
         android:onClick="login"/>
 
     <Button
+        android:id="@+id/logout_button"
+        style="@style/BasicButtonStyle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/login_button"
+        android:text="Logout"
+        android:visibility="invisible"
+        android:onClick="logout"/>
+
+    <Button
         android:id="@+id/list_all_button"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/login_button"
         style="@style/BasicButtonStyle"
         android:text="List all items"
@@ -23,6 +34,7 @@
 
     <Button
         android:id="@+id/search_button"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/list_all_button"
         style="@style/BasicButtonStyle"
         android:text="Search for items"
@@ -31,6 +43,7 @@
 
     <Button
         android:id="@+id/add_item_button"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_button"
         style="@style/BasicButtonStyle"
         android:text="Add an item"

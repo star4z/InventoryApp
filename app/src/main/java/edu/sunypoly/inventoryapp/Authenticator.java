@@ -1,11 +1,7 @@
 package edu.sunypoly.inventoryapp;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,15 +21,21 @@ import java.util.concurrent.ExecutionException;
 public class Authenticator {
     private final String TAG = this.getClass().getSimpleName();
     //characters reserved by JSON and SQL standards
-    static final char[] ILLEGAL_CHARACTERS = new char[]{'{', '}', '[', ']', '/', '\\', ':', '#',
+     static final char[] ILLEGAL_CHARACTERS = new char[]{'{', '}', '[', ']', '/', '\\', ':', '#',
             ',', '?', '&', '=', '<', '>', '(', ')', '*', '^', '!', '~', '-', '|', ';', '%'};
 
     private static final Authenticator authenticator = new Authenticator();
 
     private boolean loggedIn;
     private String userKey;
+    private static URL url;
 
     private Authenticator() {
+        try {
+            url = new URL("http://150.156.202.112:8000/inventory");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Authenticator getInstance() {
@@ -41,13 +43,18 @@ public class Authenticator {
     }
 
 
-    void login(String username, String password) {
+    boolean login(String username, String password) {
         //TODO
         loggedIn = true;
+        return loggedIn;
     }
 
     void logout() {
         loggedIn = false;
+    }
+
+    boolean isLoggedIn(){
+        return loggedIn;
     }
 
     boolean addItem(InventoryItem item) {
@@ -159,13 +166,12 @@ public class Authenticator {
     }
 
     private static class DeleteItemsTask extends AsyncTask<InventoryItem, Void, Boolean> {
-        private final static String TAG = "DeleteItemsTask";
+        private final String TAG = "DeleteItemsTask";
 
         @Override
         protected Boolean doInBackground(InventoryItem... items) {
-            URL url;
             try {
-                url = new URL("http://150.156.202.112:8000/inventory");
+
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("DELETE");
 
@@ -233,7 +239,7 @@ public class Authenticator {
     }
 
 
-    static String inputStreamToString(InputStream is) throws IOException {
+     static String inputStreamToString(InputStream is) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         StringBuilder result = new StringBuilder();
         String line;

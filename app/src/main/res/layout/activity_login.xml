@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/username_field"
         app:layout_constraintStart_toStartOf="parent"
+        android:password="true"
         android:hint="password"/>
 
     <Button
