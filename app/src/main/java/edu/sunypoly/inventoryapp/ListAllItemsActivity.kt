@@ -15,19 +15,20 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 import java.util.ArrayList
-import java.util.concurrent.ExecutionException
+
+private val NO_ITEMS = -1
+private val TASK_COMPLETE = 1
+private val GET_ITEMS = 0
+val UPDATE_ITEMS = 2
+private val SERVER_ERROR = -2
 
 class ListAllItemsActivity : AppCompatActivity() {
 
     private val TAG = javaClass.simpleName
 
-    private var inventoryItems: ArrayList<InventoryItem>? = null
+    var inventoryItems: ArrayList<InventoryItem>? = null
     private var mAdapter: RecyclerView.Adapter<*>? = null
     private var layoutManager: RecyclerView.LayoutManager? = null
-
-    private val NO_ITEMS = -1
-    private val TASK_COMPLETE = 1
-    private val GET_ITEMS = 0
 
     private val handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(inputMessage: Message) {
@@ -35,18 +36,25 @@ class ListAllItemsActivity : AppCompatActivity() {
             when (inputMessage.what) {
                 GET_ITEMS -> {
                     Log.v(TAG, "GET ITEMS")
-                    recycler_view.adapter = mAdapter
-//                    item_info_text.text = ""
+                    updateRecyclerView()
                 }
                 NO_ITEMS -> {
                     Log.v(TAG, "NO_ITEMS")
                     Toast.makeText(this@ListAllItemsActivity, "No items to display.", Toast.LENGTH_LONG).show()
                     item_info_text.text = "No items"
                 }
+                SERVER_ERROR -> {
+                    Log.v(TAG, "SERVER ERROR")
+                    item_info_text.text = "Could not contact server."
+                }
                 TASK_COMPLETE -> {
                     Log.v(TAG, "TASK_COMPLETE")
                     progress_bar.visibility = View.GONE
-//                    item_info_text.text = "Loaded Items"
+                }
+                UPDATE_ITEMS -> {
+                    Log.v(TAG, "UPDATE ITEMS")
+                    updateItems()
+                    updateRecyclerView()
                 }
             }
 
@@ -58,13 +66,17 @@ class ListAllItemsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_all_items)
 
-        mAdapter = ItemRecyclerAdapter(ArrayList())
+        mAdapter = ItemRecyclerAdapter(handler, ArrayList())
         recycler_view!!.adapter = mAdapter
         layoutManager = LinearLayoutManager(this)
         recycler_view!!.layoutManager = layoutManager
 
         progress_bar.visibility = View.VISIBLE
 
+        updateItems()
+    }
+
+    private fun updateItems() {
         GlobalScope.launch {
             val authenticator = Authenticator.getInstance()
             authenticator.login("", "")
@@ -75,18 +87,19 @@ class ListAllItemsActivity : AppCompatActivity() {
         }
     }
 
-    fun onEventStart() {
-
-    }
-
     private fun onEventFinish() {
         Log.d(TAG, "onEventFinished called")
         if (inventoryItems != null) {
-            mAdapter = ItemRecyclerAdapter(inventoryItems)
             handler.sendMessage(handler.obtainMessage(GET_ITEMS))
         } else {
             handler.sendMessage(handler.obtainMessage(NO_ITEMS))
         }
         handler.sendMessage(handler.obtainMessage(TASK_COMPLETE))
+    }
+
+
+    fun updateRecyclerView() {
+        mAdapter = ItemRecyclerAdapter(handler, inventoryItems)
+        recycler_view.adapter = mAdapter
     }
 }

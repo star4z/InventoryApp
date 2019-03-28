@@ -3,6 +3,7 @@ package edu.sunypoly.inventoryapp
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -11,7 +12,10 @@ import android.widget.TextView
 import android.widget.Toast
 import java.io.IOException
 
-class ItemViewHolder(itemView: ConstraintLayout) : RecyclerView.ViewHolder(itemView) {
+class ItemViewHolder(val handler: Handler, itemView: ConstraintLayout) : RecyclerView.ViewHolder(itemView) {
+
+    val TAG = "ItemViewHolder"
+
     var itemTextView: TextView = itemView.findViewById(R.id.item_text_view)
     var editButton: ImageButton = itemView.findViewById(R.id.edit_button)
     var deleteButton: ImageButton = itemView.findViewById(R.id.delete_button)
@@ -68,9 +72,11 @@ class ItemViewHolder(itemView: ConstraintLayout) : RecyclerView.ViewHolder(itemV
                     setMessage("Are you sure you want to delete this item?")
                     setPositiveButton("YES") { dialog, id ->
                         //Delete item
+
                         val auth = Authenticator.getInstance()
                         auth.login("","")
                         auth.deleteItem(inventoryItem)
+                        handler.sendMessage(handler.obtainMessage(UPDATE_ITEMS))
                     }
                     setNegativeButton("NO") { _, _ -> }
                 }

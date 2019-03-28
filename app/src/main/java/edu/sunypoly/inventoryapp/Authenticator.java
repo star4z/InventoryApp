@@ -211,8 +211,11 @@ public class Authenticator {
 
             InventoryItem[] inventoryItems = gson.fromJson(input, InventoryItem[].class);
 
-            return new ArrayList<>(Arrays.asList(inventoryItems));
-
+            if (inventoryItems != null) {
+                return new ArrayList<>(Arrays.asList(inventoryItems));
+            } else {
+                return null;
+            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
