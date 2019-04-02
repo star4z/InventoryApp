@@ -9,6 +9,9 @@ import java.lang.reflect.InvocationHandler
 
 import java.util.ArrayList
 
+/**
+ * Handles inflation of inventoryItems; connects ItemViewHolder to ListAllItemsActivity or SearchActivity
+ */
 class ItemRecyclerAdapter(val handler: Handler, var mDataset: ArrayList<InventoryItem>?) : RecyclerView.Adapter<ItemViewHolder>() {
 
     fun getmDataset(): ArrayList<InventoryItem>? {

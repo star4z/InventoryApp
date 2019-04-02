@@ -14,7 +14,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.ArrayList
 
-
+/**
+ * Lets the user search through all items in the database
+ * Basically an adapted version of ListAllItemsActivity
+ */
 class SearchActivity : AppCompatActivity() {
 
 
@@ -83,8 +86,9 @@ class SearchActivity : AppCompatActivity() {
             Log.d(TAG, status.message)
             if (status.equals(AuthenticatorStatus.GotItems)) {
                 val items = (status as AuthenticatorStatus.ListStatus).data
-                inventoryItems = items.filter { it.contains(query) } as ArrayList<InventoryItem>
 
+                //Filters items based on the query
+                inventoryItems = items.filter { it.contains(query) } as ArrayList<InventoryItem>
             }
             Log.d(TAG, "Got inventory items; $inventoryItems")
 

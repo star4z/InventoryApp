@@ -12,6 +12,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 
+/**
+ * Stores inventory item data
+ * Used by GSON to convert between JSONs and Objects.
+ */
 public class InventoryItem implements Serializable {
     private int id;
     private int barcode;
@@ -147,6 +151,11 @@ public class InventoryItem implements Serializable {
                 '}';
     }
 
+    /**
+     * Returns the item as a Bundle for passing it through Intents, etc
+     * (Alternate method to the byte[] stuff below)
+     * @return Bundle
+     */
     public Bundle toBundle() {
         Bundle bundle = new Bundle();
 
@@ -163,6 +172,10 @@ public class InventoryItem implements Serializable {
         return bundle;
     }
 
+    /**
+     * Returns a hashmap of all the id keys
+     * @return
+     */
     HashMap<String, String> getFields() {
         return new HashMap<String, String>() {{
             put(ID, "" + id);
@@ -177,6 +190,11 @@ public class InventoryItem implements Serializable {
         }};
     }
 
+    /**
+     * Used to convert the object into a form that can be passed through an Intent
+     * @return
+     * @throws IOException
+     */
     byte[] toByteArray() throws IOException {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutput out = new ObjectOutputStream(bos)) {
@@ -185,6 +203,13 @@ public class InventoryItem implements Serializable {
         }
     }
 
+    /**
+     * Used to convert the item back from a byte[] after being received from an intent
+     * @param bytes
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     static InventoryItem fromByteArray(byte[] bytes) throws IOException, ClassNotFoundException {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
              ObjectInput in = new ObjectInputStream(bis)) {
@@ -192,6 +217,11 @@ public class InventoryItem implements Serializable {
         }
     }
 
+    /**
+     * Used by SearchActivity to nicely check if this item contains the specified query.
+     * @param s
+     * @return
+     */
      boolean contains(String s){
         return (id + "" + barcode + qr + name + type + serial + room + brand + acquired).contains(s);
      }

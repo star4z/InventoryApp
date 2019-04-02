@@ -12,6 +12,9 @@ import android.widget.TextView
 import android.widget.Toast
 import java.io.IOException
 
+/**
+ * This handles stuff related to the views that are inflated in the RecyclerView in both ListAllItemsActivity and SearchActivity
+ */
 class ItemViewHolder(val handler: Handler, itemView: ConstraintLayout) : RecyclerView.ViewHolder(itemView) {
 
     val TAG = "ItemViewHolder"
@@ -23,6 +26,7 @@ class ItemViewHolder(val handler: Handler, itemView: ConstraintLayout) : Recycle
 
     init {
 
+        //when the item is clicked, opens a basic page of more information
         itemTextView.setOnClickListener {
             if (inventoryItem != null) {
                 val bundle = Bundle()
@@ -44,6 +48,7 @@ class ItemViewHolder(val handler: Handler, itemView: ConstraintLayout) : Recycle
             }
         }
 
+        //when the edit button is clicked, opens AddItemActivity to edit it
         editButton.setOnClickListener {
             if (inventoryItem != null) {
                 val bundle = inventoryItem!!.toBundle()
@@ -61,12 +66,14 @@ class ItemViewHolder(val handler: Handler, itemView: ConstraintLayout) : Recycle
             }
         }
 
+        //When the delete button is clicked, deletes the item from the database and updates the UI
         deleteButton.setOnClickListener {
             if (inventoryItem != null) {
                 val bundle = inventoryItem!!.toBundle()
 
                 Log.d("ViewHolder", bundle.toString())
 
+                //Double checks with the user before deleting
                 val builder = AlertDialog.Builder(itemView.context)
                 builder.apply {
                     setMessage("Are you sure you want to delete this item?")

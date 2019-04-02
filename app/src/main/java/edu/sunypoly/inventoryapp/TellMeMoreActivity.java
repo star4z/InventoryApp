@@ -7,6 +7,9 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * Lists all the fields of an InventoryItem
+ */
 public class TellMeMoreActivity extends AppCompatActivity {
 
     @Override

@@ -18,18 +18,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Handles all the server stuff
+ */
 public class Authenticator {
+    //Used for nicer Log calls
     private final String TAG = this.getClass().getSimpleName();
     //characters reserved by JSON and SQL standards
-     static final char[] ILLEGAL_CHARACTERS = new char[]{'{', '}', '[', ']', '/', '\\', ':', '#',
+    static final char[] ILLEGAL_CHARACTERS = new char[]{'{', '}', '[', ']', '/', '\\', ':', '#',
             ',', '?', '&', '=', '<', '>', '(', ')', '*', '^', '!', '~', '-', '|', ';', '%'};
 
+    //This is used to make the class a singleton
     private static final Authenticator authenticator = new Authenticator();
 
     private boolean loggedIn;
     private String userKey;
     private static URL url;
 
+
+    //Private constructor is used to make the class a singleton
     private Authenticator() {
         try {
             url = new URL("http://150.156.202.112:8000/inventory");
@@ -38,25 +45,44 @@ public class Authenticator {
         }
     }
 
+    //This is how other classes access this class
     public static Authenticator getInstance() {
         return authenticator;
     }
 
 
+    /**
+     * Handles logging in
+     * Obviously missing some things
+     * @param username
+     * @param password
+     * @return
+     */
     boolean login(String username, String password) {
         //TODO
         loggedIn = true;
         return loggedIn;
     }
 
+    /**
+     * Logs the user out.
+     */
     void logout() {
         loggedIn = false;
     }
 
-    boolean isLoggedIn(){
+    /**
+     * @return true if user is logged in, else false
+     */
+    boolean isLoggedIn() {
         return loggedIn;
     }
 
+    /**
+     * Starts async task to add the item
+     * @param item
+     * @return
+     */
     AuthenticatorStatus addItem(InventoryItem item) {
         if (loggedIn) {
             AddItemsTask addItemsTask = new AddItemsTask(item);
@@ -73,7 +99,10 @@ public class Authenticator {
     }
 
 
-
+    /**
+     * Asynchronously adds the item
+     * Probably helpful to look at the documentation for android.os.AsyncTask
+     */
     private static class AddItemsTask extends AsyncTask<Void, Void, AuthenticatorStatus> {
 
         private InventoryItem item;
@@ -91,19 +120,25 @@ public class Authenticator {
         private AuthenticatorStatus addItemToDatabase(InventoryItem item) {
             URL url;
             try {
+                //Defines URL
                 url = new URL("http://150.156.202.112:8000/inventory");
+                //Tries to connect to URL via HTTP protocol
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
 
+                //Inits GSON
                 Gson gson = new GsonBuilder().create();
+                //GSON converts item to json
                 String json = gson.toJson(item);
 
                 httpURLConnection.setDoOutput(true);
+                //Connects to output stream
                 DataOutputStream out = new DataOutputStream(httpURLConnection.getOutputStream());
-                out.writeBytes(json);
-                out.flush();
-                out.close();
+                out.writeBytes(json);//writes the json
+                out.flush();//actually writes the json (Java stream thing, this needs to be called)
+                out.close();//Closes the stream
 
+                //Not necessary calls, but helpful if you want to fine tune things for some reason
                 httpURLConnection.setConnectTimeout(5000);
                 httpURLConnection.setReadTimeout(5000);
 
@@ -121,13 +156,18 @@ public class Authenticator {
 
     }
 
+    /**
+     * Returns list of all items in a AuthenticatorStatus.ListStatus if the server is running,
+     * else returns an appropriate error status
+     * @return
+     */
     AuthenticatorStatus getItems() {
         if (loggedIn) {
             ReadFilesTask readFilesTask = new ReadFilesTask();
             readFilesTask.execute();
             try {
                 return readFilesTask.get();
-            } catch (Exception e){
+            } catch (Exception e) {
                 return AuthenticatorStatus.ServerError;
             }
         } else {
@@ -196,7 +236,6 @@ public class Authenticator {
     }
 
 
-
     public static class ReadFilesTask extends AsyncTask<Void, Void, AuthenticatorStatus> {
 
         @Override
@@ -222,14 +261,14 @@ public class Authenticator {
                 } else {
                     return AuthenticatorStatus.NoItems;
                 }
-            } catch (IOException e){
+            } catch (IOException e) {
                 return AuthenticatorStatus.ServerError;
             }
         }
     }
 
 
-     static String inputStreamToString(InputStream is) throws IOException {
+    static String inputStreamToString(InputStream is) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         StringBuilder result = new StringBuilder();
         String line;

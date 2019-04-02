@@ -3,10 +3,13 @@ package edu.sunypoly.inventoryapp;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * A special return type used by Authenticator. Used for passing data.
+ */
 public class AuthenticatorStatus {
 
     String message;
-    private long statusId;
+    private long statusId; //The status id needs to be the same for two Statuses to be considered the same status.
 
     public AuthenticatorStatus(String message) {
         this.message = message;
@@ -30,16 +33,25 @@ public class AuthenticatorStatus {
 
     public static AuthenticatorStatus AuthError = new AuthenticatorStatus("User not logged in.", 6);
 
+    /**
+     * Used to pass list of items in addition to message.
+     */
     static class ListStatus extends AuthenticatorStatus{
         ArrayList<InventoryItem> data;
 
         public ListStatus(String message, ArrayList<InventoryItem> data) {
-            super(message, GotItems.statusId);
+
+            super(message, GotItems.statusId); //Uses the id from "GotItems" to make status checking easier
             this.data = data;
         }
     }
 
 
+    /**
+     * Accepts sub-classes and only compared statusId's
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

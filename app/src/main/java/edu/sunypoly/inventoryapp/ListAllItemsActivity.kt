@@ -21,6 +21,9 @@ val GET_ITEMS = 0
 val UPDATE_ITEMS = 2
 val SERVER_ERROR = -2
 
+/**
+ * Lists every item in the database
+ */
 class ListAllItemsActivity : AppCompatActivity() {
 
     private val TAG = javaClass.simpleName
@@ -29,6 +32,7 @@ class ListAllItemsActivity : AppCompatActivity() {
     private var mAdapter: RecyclerView.Adapter<*>? = null
     private var layoutManager: RecyclerView.LayoutManager? = null
 
+    //Handler is needed to update the UI based on calls made on other threads
     private val handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(inputMessage: Message) {
             Log.d(TAG, "Handle message received.")
@@ -60,29 +64,46 @@ class ListAllItemsActivity : AppCompatActivity() {
     }
 
 
+    /**
+     * Called when the activity is first created.
+     * Inits basic values
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_all_items)
 
+        //Connects adapter to recycler_view (it's a RecyclerView)
         mAdapter = ItemRecyclerAdapter(handler, ArrayList())
         recycler_view!!.adapter = mAdapter
+        //Sets the RecyclerView as a vertical linear layout (all items are in 1 column)
         layoutManager = LinearLayoutManager(this)
         recycler_view!!.layoutManager = layoutManager
 
+        //Displays loading thingy
         progress_bar.visibility = View.VISIBLE
 
+        //Gets items from database
         updateItems()
     }
 
+    /**
+     * Starts asynchronous call to get inventory items from server
+     */
     private fun updateItems() {
+        //Status is used to receive more complicated results from authenticator. See the class' default instances.
         var status: AuthenticatorStatus = AuthenticatorStatus.AuthError
+
+        //Using Kotlin coroutines to start async task
         GlobalScope.launch {
             val authenticator = Authenticator.getInstance()
-            authenticator.login("", "")
+//            authenticator.login("", "")
+
+            //Gets items from authenticator in the form of a status
             status = authenticator.items
             Log.d(TAG, status.message)
             when (status) {
                 AuthenticatorStatus.GotItems -> {
+                    //if the status is of the correct type, get the list of items from it
                     inventoryItems = (status as AuthenticatorStatus.ListStatus).data
                 }
             }
@@ -92,6 +113,10 @@ class ListAllItemsActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Called once the authenticator does its stuff.
+     * Tells handler what to do.
+     */
     private fun onEventFinish(status: AuthenticatorStatus) {
         Log.d(TAG, "onEventFinished called")
 
@@ -110,6 +135,11 @@ class ListAllItemsActivity : AppCompatActivity() {
     }
 
 
+    /**
+     * When inventory items is changed, this needs to be called to update the views
+     * Probably could be done other ways but this works for what we need it to since this is usually
+     * called when inventory items is initially null.
+     */
     fun updateRecyclerView() {
         mAdapter = ItemRecyclerAdapter(handler, inventoryItems)
         recycler_view.adapter = mAdapter

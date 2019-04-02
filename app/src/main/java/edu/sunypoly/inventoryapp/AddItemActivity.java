@@ -13,8 +13,12 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * Handles adding and updating items in the server
+ */
 public class AddItemActivity extends AppCompatActivity {
 
+    //References to all the views where the fields are updated
     TextView barcodeView;
     TextView qrCodeView;
     EditText nameView;
@@ -34,6 +38,7 @@ public class AddItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
 
+        //Connects view data members with their corresponding views in the xml
         barcodeView = findViewById(R.id.barcode_display);
         qrCodeView = findViewById(R.id.qr_display);
         nameView = findViewById(R.id.editText);
@@ -43,6 +48,7 @@ public class AddItemActivity extends AppCompatActivity {
         brandView = findViewById(R.id.editText5);
         acquiredView = findViewById(R.id.editText6);
 
+        //If this activity is being used to update, rather than add an item, this stuff updates the fields with the appropriate values
         if (getIntent() != null) {
 
             Bundle extras = getIntent().getExtras();
@@ -64,16 +70,23 @@ public class AddItemActivity extends AppCompatActivity {
         authenticator = Authenticator.getInstance();
     }
 
+    /**
+     * Called when add button is pressed
+     * @param view required parameter for methods which are referenced in xml
+     */
     public void onAdd(View view) {
 
+        //This doesn't usually show, but if things are slow, this shows up
         ProgressDialog dialog = ProgressDialog.show(this, "Contacting server...", "Adding item");
 
+        //Error checking
         if (!(nameView.getText().toString().length() > 0)) {
             Toast.makeText(this, "Item must at least have a name", Toast.LENGTH_LONG)
                     .show();
             return;
         }
 
+        //Get values from views
         String barcodeStr = barcodeView.getText().toString();
         String qr = qrCodeView.getText().toString();
         String name = nameView.getText().toString();
@@ -84,6 +97,7 @@ public class AddItemActivity extends AppCompatActivity {
         String acquired = acquiredView.getText().toString();
 
 
+        //parsing view values to the correct data type
         int barcode = -1;
         int serial = -1;
         try {
