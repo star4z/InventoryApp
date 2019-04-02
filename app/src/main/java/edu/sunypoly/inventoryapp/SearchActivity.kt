@@ -9,25 +9,40 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
-import kotlinx.android.synthetic.main.activity_list_all_items.*
+import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
 import java.util.ArrayList
 
-val NO_ITEMS = -1
-val TASK_COMPLETE = 1
-val GET_ITEMS = 0
-val UPDATE_ITEMS = 2
-val SERVER_ERROR = -2
 
-class ListAllItemsActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity() {
+
 
     private val TAG = javaClass.simpleName
 
     var inventoryItems: ArrayList<InventoryItem>? = null
     private var mAdapter: RecyclerView.Adapter<*>? = null
     private var layoutManager: RecyclerView.LayoutManager? = null
+
+    var query = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_search)
+
+        mAdapter = ItemRecyclerAdapter(handler, ArrayList())
+        search_results!!.adapter = mAdapter
+        layoutManager = LinearLayoutManager(this)
+        search_results!!.layoutManager = layoutManager
+
+        progress_bar.visibility = View.GONE
+    }
+
+    fun search(view: View) {
+        query = search_box.text.toString()
+
+        updateItems()
+    }
 
     private val handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(inputMessage: Message) {
@@ -59,21 +74,6 @@ class ListAllItemsActivity : AppCompatActivity() {
         }
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_list_all_items)
-
-        mAdapter = ItemRecyclerAdapter(handler, ArrayList())
-        recycler_view!!.adapter = mAdapter
-        layoutManager = LinearLayoutManager(this)
-        recycler_view!!.layoutManager = layoutManager
-
-        progress_bar.visibility = View.VISIBLE
-
-        updateItems()
-    }
-
     private fun updateItems() {
         var status: AuthenticatorStatus = AuthenticatorStatus.AuthError
         GlobalScope.launch {
@@ -81,12 +81,13 @@ class ListAllItemsActivity : AppCompatActivity() {
             authenticator.login("", "")
             status = authenticator.items
             Log.d(TAG, status.message)
-            when (status) {
-                AuthenticatorStatus.GotItems -> {
-                    inventoryItems = (status as AuthenticatorStatus.ListStatus).data
-                }
+            if (status.equals(AuthenticatorStatus.GotItems)) {
+                val items = (status as AuthenticatorStatus.ListStatus).data
+                inventoryItems = items.filter { it.contains(query) } as ArrayList<InventoryItem>
+
             }
             Log.d(TAG, "Got inventory items; $inventoryItems")
+
         }.invokeOnCompletion {
             onEventFinish(status)
         }
@@ -109,9 +110,8 @@ class ListAllItemsActivity : AppCompatActivity() {
         handler.sendMessage(handler.obtainMessage(TASK_COMPLETE))
     }
 
-
     fun updateRecyclerView() {
         mAdapter = ItemRecyclerAdapter(handler, inventoryItems)
-        recycler_view.adapter = mAdapter
+        search_results.adapter = mAdapter
     }
 }

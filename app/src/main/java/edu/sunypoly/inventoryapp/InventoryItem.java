@@ -33,13 +33,7 @@ public class InventoryItem implements Serializable {
     public static final String BRAND = "brand";
     public static final String ACQUIRED = "acquired";
 
-//    private HashMap<String, String> fieldsMap;
-
-//    public static final String[] fields = new String[]{ID, BARCODE, QR, NAME, TYPE, SERIAL, ROOM,
-//            BRAND, ACQUIRED};
-
     public InventoryItem() {
-//        fieldsMap = new HashMap<>();
     }
 
     public InventoryItem(final int id, final int barcode, final String qr, final String name,
@@ -55,17 +49,6 @@ public class InventoryItem implements Serializable {
         this.brand = brand;
         this.acquired = acquired;
 
-//        fieldsMap = new HashMap<String, String>(){{
-//            put(ID, "" + id);
-//            put(BARCODE, "" + barcode);
-//            put(QR, qr);
-//            put(NAME, name);
-//            put(TYPE, type);
-//            put(SERIAL, "" + serial);
-//            put(ROOM, room);
-//            put(BRAND, brand);
-//            put(ACQUIRED, acquired);
-//        }};
     }
 
     public int getId() {
@@ -202,10 +185,14 @@ public class InventoryItem implements Serializable {
         }
     }
 
-     static InventoryItem fromByteArray(byte[] bytes) throws IOException, ClassNotFoundException {
+    static InventoryItem fromByteArray(byte[] bytes) throws IOException, ClassNotFoundException {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
              ObjectInput in = new ObjectInputStream(bis)) {
             return (InventoryItem) in.readObject();
         }
     }
+
+     boolean contains(String s){
+        return (id + "" + barcode + qr + name + type + serial + room + brand + acquired).contains(s);
+     }
 }
