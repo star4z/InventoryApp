@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         authenticator!!.logout()
         Toast.makeText(this, "Logged out.", Toast.LENGTH_LONG).show()
         logout_button.visibility = View.INVISIBLE
+        username_view.visibility = View.INVISIBLE
     }
 
     fun listAll(view: View) {

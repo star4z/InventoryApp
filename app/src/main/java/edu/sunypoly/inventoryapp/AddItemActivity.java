@@ -107,14 +107,19 @@ public class AddItemActivity extends AppCompatActivity {
 
         authenticator.login("", "");
 
-        boolean success = authenticator.addItem(item);
+        AuthenticatorStatus status = authenticator.addItem(item);
 
         dialog.dismiss();
 
-        if (success) {
+
+        if (status.equals(AuthenticatorStatus.AddedItem)) {
             Toast.makeText(this, "Added item.", Toast.LENGTH_LONG).show();
+        } else if (status.equals(AuthenticatorStatus.ServerError)){
+            Toast.makeText(this, status.message, Toast.LENGTH_LONG).show();
+
         } else {
             Toast.makeText(this, "Could not add item.", Toast.LENGTH_LONG).show();
+
         }
     }
 

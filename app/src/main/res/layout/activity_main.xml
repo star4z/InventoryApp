@@ -24,6 +24,12 @@
         android:visibility="invisible"
         android:onClick="logout"/>
 
+    <TextView
+        android:id="@+id/username_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
+
     <Button
         android:id="@+id/list_all_button"
         app:layout_constraintStart_toStartOf="parent"

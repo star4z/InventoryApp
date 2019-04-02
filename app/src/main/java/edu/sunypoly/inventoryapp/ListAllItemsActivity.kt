@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_list_all_items.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -40,7 +39,6 @@ class ListAllItemsActivity : AppCompatActivity() {
                 }
                 NO_ITEMS -> {
                     Log.v(TAG, "NO_ITEMS")
-                    Toast.makeText(this@ListAllItemsActivity, "No items to display.", Toast.LENGTH_LONG).show()
                     item_info_text.text = "No items"
                 }
                 SERVER_ERROR -> {
@@ -77,22 +75,36 @@ class ListAllItemsActivity : AppCompatActivity() {
     }
 
     private fun updateItems() {
+        var status: AuthenticatorStatus = AuthenticatorStatus.AuthError
         GlobalScope.launch {
             val authenticator = Authenticator.getInstance()
             authenticator.login("", "")
-            inventoryItems = authenticator.items
+            status = authenticator.items
+            Log.d(TAG, status.message)
+            when (status) {
+                AuthenticatorStatus.GotItems -> {
+                    inventoryItems = (status as AuthenticatorStatus.ListStatus).data
+                }
+            }
             Log.d(TAG, "Got inventory items; $inventoryItems")
         }.invokeOnCompletion {
-            onEventFinish()
+            onEventFinish(status)
         }
     }
 
-    private fun onEventFinish() {
+    private fun onEventFinish(status: AuthenticatorStatus) {
         Log.d(TAG, "onEventFinished called")
-        if (inventoryItems != null) {
-            handler.sendMessage(handler.obtainMessage(GET_ITEMS))
-        } else {
-            handler.sendMessage(handler.obtainMessage(NO_ITEMS))
+
+        when (status) {
+            AuthenticatorStatus.GotItems -> {
+                handler.sendMessage(handler.obtainMessage(GET_ITEMS))
+            }
+            AuthenticatorStatus.NoItems -> {
+                handler.sendMessage(handler.obtainMessage(NO_ITEMS))
+            }
+            else -> {
+                handler.sendMessage(handler.obtainMessage(SERVER_ERROR))
+            }
         }
         handler.sendMessage(handler.obtainMessage(TASK_COMPLETE))
     }
