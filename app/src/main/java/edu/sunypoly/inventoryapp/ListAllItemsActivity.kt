@@ -95,7 +95,7 @@ class ListAllItemsActivity : AppCompatActivity() {
 
         //Using Kotlin coroutines to start async task
         GlobalScope.launch {
-            val authenticator = Authenticator.getInstance()
+            val authenticator = Authenticator.instance
 //            authenticator.login("", "")
 
             //Gets items from authenticator in the form of a status

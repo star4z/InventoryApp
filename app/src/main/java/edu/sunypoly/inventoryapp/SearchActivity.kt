@@ -80,7 +80,7 @@ class SearchActivity : AppCompatActivity() {
     private fun updateItems() {
         var status: AuthenticatorStatus = AuthenticatorStatus.AuthError
         GlobalScope.launch {
-            val authenticator = Authenticator.getInstance()
+            val authenticator = Authenticator.instance
             authenticator.login("", "")
             status = authenticator.items
             Log.d(TAG, status.message)

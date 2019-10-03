@@ -80,9 +80,9 @@ class ItemViewHolder(val handler: Handler, itemView: ConstraintLayout) : Recycle
                     setPositiveButton("YES") { dialog, id ->
                         //Delete item
 
-                        val auth = Authenticator.getInstance()
+                        val auth = Authenticator.instance
                         auth.login("","")
-                        auth.deleteItem(inventoryItem)
+                        auth.deleteItem(inventoryItem!!)
                         handler.sendMessage(handler.obtainMessage(UPDATE_ITEMS))
                     }
                     setNegativeButton("NO") { _, _ -> }

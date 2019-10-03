@@ -23,7 +23,7 @@ class LoginActivity : AppCompatActivity() {
         val usr = u.text.toString()
         val pwd = p.text.toString()
 
-        val authenticator = Authenticator.getInstance()
+        val authenticator = Authenticator.instance
         val loginSuccessful = authenticator.login(usr, pwd)
 
         Log.d(TAG, "Login attempted. Result: $loginSuccessful")

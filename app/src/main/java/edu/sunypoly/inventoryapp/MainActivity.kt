@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        authenticator = Authenticator.getInstance() //Authenticator is a singleton, so this is the way to access it
+        authenticator = Authenticator.instance //Authenticator is a singleton, so this is the way to access it
 
         //If the user is logged in, shows the logout button
         if (authenticator!!.isLoggedIn){
