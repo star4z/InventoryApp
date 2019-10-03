@@ -4,8 +4,8 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.support.constraint.ConstraintLayout
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.TextView
@@ -15,7 +15,7 @@ import java.io.IOException
 /**
  * This handles stuff related to the views that are inflated in the RecyclerView in both ListAllItemsActivity and SearchActivity
  */
-class ItemViewHolder(val handler: Handler, itemView: ConstraintLayout) : RecyclerView.ViewHolder(itemView) {
+class ItemViewHolder(val handler: Handler, itemView: ConstraintLayout) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     val TAG = "ItemViewHolder"
 

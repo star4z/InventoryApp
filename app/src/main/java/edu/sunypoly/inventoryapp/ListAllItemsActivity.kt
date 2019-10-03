@@ -1,12 +1,12 @@
 package edu.sunypoly.inventoryapp
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_list_all_items.*
@@ -29,8 +29,8 @@ class ListAllItemsActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
 
     var inventoryItems: ArrayList<InventoryItem>? = null
-    private var mAdapter: RecyclerView.Adapter<*>? = null
-    private var layoutManager: RecyclerView.LayoutManager? = null
+    private var mAdapter: androidx.recyclerview.widget.RecyclerView.Adapter<*>? = null
+    private var layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager? = null
 
     //Handler is needed to update the UI based on calls made on other threads
     private val handler = object : Handler(Looper.getMainLooper()) {
@@ -76,7 +76,7 @@ class ListAllItemsActivity : AppCompatActivity() {
         mAdapter = ItemRecyclerAdapter(handler, ArrayList())
         recycler_view!!.adapter = mAdapter
         //Sets the RecyclerView as a vertical linear layout (all items are in 1 column)
-        layoutManager = LinearLayoutManager(this)
+        layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recycler_view!!.layoutManager = layoutManager
 
         //Displays loading thingy

@@ -1,6 +1,6 @@
 package edu.sunypoly.inventoryapp
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 
@@ -20,7 +20,7 @@ class TellMeMoreActivity : AppCompatActivity() {
         if (extras != null) {
             var item: InventoryItem? = null
             try {
-                item = InventoryItem.fromByteArray(extras.getByteArray("item"))
+                item = InventoryItem.fromByteArray(extras.getByteArray("item")!!)
             } catch (e: IOException) {
                 e.printStackTrace()
             } catch (e: ClassNotFoundException) {

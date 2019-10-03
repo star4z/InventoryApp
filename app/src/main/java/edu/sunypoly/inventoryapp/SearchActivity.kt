@@ -1,12 +1,12 @@
 package edu.sunypoly.inventoryapp
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_search.*
@@ -24,8 +24,8 @@ class SearchActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
 
     var inventoryItems: ArrayList<InventoryItem>? = null
-    private var mAdapter: RecyclerView.Adapter<*>? = null
-    private var layoutManager: RecyclerView.LayoutManager? = null
+    private var mAdapter: androidx.recyclerview.widget.RecyclerView.Adapter<*>? = null
+    private var layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager? = null
 
     var query = ""
 
@@ -35,7 +35,7 @@ class SearchActivity : AppCompatActivity() {
 
         mAdapter = ItemRecyclerAdapter(handler, ArrayList())
         search_results!!.adapter = mAdapter
-        layoutManager = LinearLayoutManager(this)
+        layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         search_results!!.layoutManager = layoutManager
 
         progress_bar.visibility = View.GONE
