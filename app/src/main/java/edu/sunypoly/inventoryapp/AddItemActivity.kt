@@ -4,6 +4,7 @@ package edu.sunypoly.inventoryapp
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
@@ -153,5 +154,10 @@ class AddItemActivity : AppCompatActivity() {
         }
 
         return false
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun launchBarcodeActivity(v: View) {
+        startActivity(Intent(this, BarcodeActivity::class.java))
     }
 }
