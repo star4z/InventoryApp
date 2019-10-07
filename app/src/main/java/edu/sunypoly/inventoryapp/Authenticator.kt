@@ -230,6 +230,7 @@ private constructor() {
                         AuthenticatorStatus.NoItems
                     }
                 } catch (e: IOException) {
+                    e.printStackTrace()
                     return AuthenticatorStatus.ServerError
                 }
 

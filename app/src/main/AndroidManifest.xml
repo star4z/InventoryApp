@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:hardwareAccelerated="true"
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        android:usesCleartextTraffic="true">
         <activity android:name=".TellMeMoreActivity"/>
         <activity android:name=".ItemDetailsActivity" />
         <activity android:name=".SearchActivity" />
