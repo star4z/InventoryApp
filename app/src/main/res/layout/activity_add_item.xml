@@ -20,7 +20,7 @@
             android:text="Scan Barcode"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:onClick="launchBarcodeActivity"/>
+            android:onClick="getBarcode"/>
 
         <TextView
             android:id="@+id/barcode_display"
@@ -45,7 +45,7 @@
             android:text="Scan QR code"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/barcode_display"
-            android:onClick="launchBarcodeActivity"/>
+            android:onClick="getQRCode"/>
 
         <TextView
             android:id="@+id/qr_display"

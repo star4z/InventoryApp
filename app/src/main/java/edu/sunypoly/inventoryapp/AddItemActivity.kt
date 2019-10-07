@@ -3,6 +3,7 @@
 package edu.sunypoly.inventoryapp
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
@@ -12,11 +13,16 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.vision.barcode.Barcode
+import edu.sunypoly.inventoryapp.barcode_reader.BarcodeReaderActivity
+import kotlinx.android.synthetic.main.activity_add_item.*
 
 /**
  * Handles adding and updating items in the server
  */
 class AddItemActivity : AppCompatActivity() {
+
+    private val tag = "AddItemActivity"
 
     //References to all the views where the fields are updated
     private lateinit var barcodeView: TextView
@@ -156,8 +162,43 @@ class AddItemActivity : AppCompatActivity() {
         return false
     }
 
+    val qr_request = 1201
+    val barcode_request = 1202
+
+    fun getQRCode(v: View) {
+        launchBarcodeActivity(v, qr_request)
+    }
+
+    fun getBarcode(v: View) {
+        launchBarcodeActivity(v, barcode_request)
+    }
+
     @Suppress("UNUSED_PARAMETER")
-    fun launchBarcodeActivity(v: View) {
-        startActivity(Intent(this, BarcodeActivity::class.java))
+    fun launchBarcodeActivity(v: View, requestCode: Int) {
+        val launchIntent = BarcodeReaderActivity.getLaunchIntent(this, true, false)
+        startActivityForResult(launchIntent, requestCode)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != Activity.RESULT_OK) {
+            Toast.makeText(this, "error in  scanning", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (data != null) {
+            val barcode = data.getParcelableExtra<Barcode>(BarcodeReaderActivity.KEY_CAPTURED_BARCODE)
+            val out = barcode?.rawValue
+            Log.d(tag, "barcode=${out}")
+            when(requestCode) {
+                qr_request -> {
+                    qrCodeView.text = out
+                }
+                barcode_request -> {
+                    barcodeView.text = out
+                }
+            }
+        }
     }
 }
