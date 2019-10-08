@@ -243,7 +243,6 @@ private constructor() {
 
     companion object {
         //characters reserved by JSON and SQL standards
-        internal val ILLEGAL_CHARACTERS = charArrayOf('{', '}', '[', ']', '/', '\\', ':', '#', ',', '?', '&', '=', '<', '>', '(', ')', '*', '^', '!', '~', '-', '|', ';', '%')
 
         //This is used to make the class a singleton
         //This is how other classes access this class

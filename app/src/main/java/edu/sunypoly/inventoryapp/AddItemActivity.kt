@@ -7,15 +7,14 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.vision.barcode.Barcode
 import edu.sunypoly.inventoryapp.barcode_reader.BarcodeReaderActivity
-import kotlinx.android.synthetic.main.activity_add_item.*
 
 /**
  * Handles adding and updating items in the server
@@ -82,9 +81,6 @@ class AddItemActivity : AppCompatActivity() {
     @Suppress("UNUSED_PARAMETER")
     fun onAdd(view: View) {
 
-        //This doesn't usually show, but if things are slow, this shows up
-        val dialog = ProgressDialog.show(this, "Contacting server...", "Adding item")
-
         //Error checking
         if (nameView.text.toString().isEmpty()) {
             Toast.makeText(this, "Item must at least have a name", Toast.LENGTH_LONG)
@@ -105,25 +101,23 @@ class AddItemActivity : AppCompatActivity() {
 
         //parsing view values to the correct data type
         var barcode = -1
-        var serial = -1
+//        var serial = -1
         try {
             if (barcodeStr.isNotEmpty())
                 barcode = Integer.valueOf(barcodeStr)
-            if (serialStr.isNotEmpty())
-                serial = Integer.valueOf(serialStr)
+//            if (serialStr.isNotEmpty())
+//                serial = Integer.valueOf(serialStr)
         } catch (e: NumberFormatException) {
-            dialog.dismiss()
             Toast.makeText(this, "Encountered a number field with a string in it.",
                     Toast.LENGTH_SHORT).show()
         }
 
-        val item = InventoryItem(id, barcode, qr, name, type, serial, room, brand,
+        val item = InventoryItem(id, barcode, qr, name, type, serialStr, room, brand,
                 acquired)
 
-        if (containsIllegalCharacter(item)) {
-            dialog.dismiss()
-            return
-        }
+
+        //This doesn't usually show, but if things are slow, this shows up
+        val dialog = ProgressDialog.show(this, "Contacting server...", "Adding item")
 
         authenticator!!.login("", "")
 
@@ -142,11 +136,13 @@ class AddItemActivity : AppCompatActivity() {
     private fun containsIllegalCharacter(item: InventoryItem): Boolean {
         val map = item.fields
 
+        val ILLEGAL_CHARACTERS = charArrayOf('{', '}', '[', ']', '/', '\\', '#', ':', ',', '?', '&', '=', '<', '>', '(', ')', '*', '^', '!', '~', '-', '|', ';', '%')
+
         for (key in map.keys) {
             if (key != InventoryItem.ID && key != InventoryItem.BARCODE &&
                     key != InventoryItem.SERIAL) {
                 for (c in map[key]!!.toCharArray()) {
-                    for (d in Authenticator.ILLEGAL_CHARACTERS) {
+                    for (d in ILLEGAL_CHARACTERS) {
                         if (c == d) {
                             Toast.makeText(this, "Field " + key + " cannot contain " +
                                     d, Toast.LENGTH_LONG).show()

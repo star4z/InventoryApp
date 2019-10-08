@@ -20,7 +20,7 @@ class InventoryItem(//        fieldsMap.put(ID, "" + id);
         var qr: String,//        fieldsMap.put(NAME, name);
         var name: String,//        fieldsMap.put(TYPE, type);
         var type: String,//        fieldsMap.put(SERIAL, "" + serial);
-        var serial: Int,//        fieldsMap.put(ROOM, room);
+        var serial: String,//        fieldsMap.put(ROOM, room);
         var room: String,//        fieldsMap.put(BRAND, brand);
         var brand: String,//        fieldsMap.put(ACQUIRED, acquired);
         var acquired: String) : Serializable {
@@ -71,7 +71,7 @@ class InventoryItem(//        fieldsMap.put(ID, "" + id);
         bundle.putString(QR, qr)
         bundle.putString(NAME, name)
         bundle.putString(TYPE, type)
-        bundle.putInt(SERIAL, serial)
+        bundle.putString(SERIAL, serial)
         bundle.putString(ROOM, room)
         bundle.putString(BRAND, brand)
         bundle.putString(ACQUIRED, acquired)
