@@ -19,7 +19,6 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"
         android:usesCleartextTraffic="true">
         <activity android:name=".TellMeMoreActivity"/>
-        <activity android:name=".ItemDetailsActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".AddItemActivity" />
