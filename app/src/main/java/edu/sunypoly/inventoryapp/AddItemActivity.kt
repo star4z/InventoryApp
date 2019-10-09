@@ -4,6 +4,7 @@ package edu.sunypoly.inventoryapp
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
@@ -15,6 +16,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.vision.barcode.Barcode
 import edu.sunypoly.inventoryapp.barcode_reader.BarcodeReaderActivity
+import java.text.SimpleDateFormat
+import java.time.Year
+import java.util.*
+import java.util.Calendar.*
 
 /**
  * Handles adding and updating items in the server
@@ -52,6 +57,9 @@ class AddItemActivity : AppCompatActivity() {
         brandView = findViewById(R.id.editText5)
         acquiredView = findViewById(R.id.editText6)
 
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        val calendar = GregorianCalendar()
+
         //If this activity is being used to update, rather than add an item, this stuff updates the fields with the appropriate values
         if (intent != null) {
 
@@ -68,10 +76,23 @@ class AddItemActivity : AppCompatActivity() {
                 roomView.setText(extras.getString(InventoryItem.ROOM))
                 brandView.setText(extras.getString(InventoryItem.BRAND))
                 acquiredView.setText(extras.getString(InventoryItem.ACQUIRED))
+            } else {
+                acquiredView.setText(dateFormat.format(calendar.time))
             }
+        } else {
+            acquiredView.setText(dateFormat.format(calendar.time))
         }
 
         authenticator = Authenticator.instance
+
+        acquiredView.setOnClickListener {
+            val date = GregorianCalendar()
+            val onDateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                date.set(year, month, dayOfMonth)
+                acquiredView.setText(dateFormat.format(date.time))
+            }
+            DatePickerDialog(this, onDateSetListener, date.get(YEAR), date.get(MONTH), date.get(DATE)).show()
+        }
     }
 
     /**
