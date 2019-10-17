@@ -8,11 +8,30 @@ import android.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
+import com.microsoft.identity.client.IAccount
+import com.microsoft.identity.client.IPublicClientApplication
+import com.microsoft.identity.client.ISingleAccountPublicClientApplication
+import com.microsoft.identity.client.PublicClientApplication
+import com.microsoft.identity.client.exception.MsalException
 import kotlinx.android.synthetic.main.activity_main.*
 
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import com.google.android.gms.common.util.IOUtils.toByteArray
+import android.provider.SyncStateContract.Helpers.update
+import android.content.pm.PackageManager
+import android.content.pm.PackageInfo
+import android.R.string.no
+import android.R.attr.name
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.util.Base64
+import android.util.Log
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+
 
 /**
  * This is the activity that is started when the app starts.
@@ -23,14 +42,57 @@ class MainActivity : AppCompatActivity() {
     private var password: String? = null
     private var authenticator: Authenticator? = null //class which handles talking to the server
 
+    /* Azure AD v2 Configs */
+    private val AUTHORITY = "https://login.microsoftonline.com/common"
+
+    /* Azure AD Variables */
+    private var mSingleAccountApp: ISingleAccountPublicClientApplication? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        /*// Add code to print out the key hash
+        try {
+            val info = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.e("MY KEY HASH:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+
+        } catch (e: NoSuchAlgorithmException) {
+
+        }*/
+
+
         authenticator = Authenticator.instance //Authenticator is a singleton, so this is the way to access it
 
+        val applicationCreatedListener = object : IPublicClientApplication.ISingleAccountApplicationCreatedListener {
+            override fun onCreated(application: ISingleAccountPublicClientApplication) {
+                /**
+                 * This test app assumes that the app is only going to support one account.
+                 * This requires "account_mode" : "SINGLE" in the config json file.
+                 *
+                 */
+                mSingleAccountApp = application
+
+                loadAccount()
+            }
+
+            override fun onError(exception: MsalException) {
+//                        txt_log.text = exception.toString()
+            }
+        }
+        PublicClientApplication.createSingleAccountPublicClientApplication(
+                this,
+                R.raw.auth_config,
+                applicationCreatedListener
+        )
+
         //If the user is logged in, shows the logout button
-        if (authenticator!!.isLoggedIn){
+        if (authenticator!!.isLoggedIn) {
             logout_button.visibility = View.VISIBLE
         }
 
@@ -42,6 +104,54 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun loadAccount() {
+        if (mSingleAccountApp == null) {
+            return
+        }
+
+        mSingleAccountApp!!.getCurrentAccountAsync(object :
+                ISingleAccountPublicClientApplication.CurrentAccountCallback {
+            override fun onAccountLoaded(activeAccount: IAccount?) {
+                updateUI(activeAccount)
+            }
+
+            override fun onAccountChanged(priorAccount: IAccount?, currentAccount: IAccount?) {
+                if (currentAccount == null) {
+                    // Perform a cleanup task as the signed-in account changed.
+                    performOperationOnSignOut()
+                }
+            }
+
+            override fun onError(exception: MsalException) {
+//                txt_log.text = exception.toString()
+            }
+        })
+    }
+
+    /**
+     * Updates UI based on the current account.
+     */
+    private fun updateUI(account: IAccount?) {
+
+        if (account != null) {
+            logout_button.isEnabled = true
+            login_button.isEnabled = false
+        } else {
+            logout_button.isEnabled = false
+            login_button.isEnabled = true
+        }
+    }
+
+    /**
+     * Updates UI when app sign out succeeds
+     */
+    private fun performOperationOnSignOut() {
+        val signOutText = "Signed Out."
+        current_user.text = ""
+        Toast.makeText(this, signOutText, Toast.LENGTH_SHORT)
+                .show()
+    }
+
 
     /**
      * This is called when an activity that was started with startActivityForResult() returns
@@ -50,8 +160,8 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 0){
-            if (resultCode == Activity.RESULT_OK){
+        if (requestCode == 0) {
+            if (resultCode == Activity.RESULT_OK) {
                 Toast.makeText(this, "Logged in.", Toast.LENGTH_LONG).show()
                 logout_button.visibility = View.VISIBLE
             }
@@ -69,11 +179,11 @@ class MainActivity : AppCompatActivity() {
     /**
      * Logs the user out (via Authenticator) and updates the UI appropriately when logout button is pressed
      */
-    fun logout(view: View){
+    fun logout(view: View) {
         authenticator!!.logout()
         Toast.makeText(this, "Logged out.", Toast.LENGTH_LONG).show()
         logout_button.visibility = View.INVISIBLE
-        username_view.visibility = View.INVISIBLE
+        current_user.visibility = View.INVISIBLE
     }
 
     /**
@@ -100,7 +210,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Generalized method that ensures the user is logged in before they can do stuff
      */
-    fun <T> startActivityIfLoggedIn(c: Class<T>){
+    fun <T> startActivityIfLoggedIn(c: Class<T>) {
         if (authenticator!!.isLoggedIn) {
             startActivity(Intent(this, c))
         } else {

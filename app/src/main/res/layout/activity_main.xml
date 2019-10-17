@@ -9,50 +9,53 @@
 
     <Button
         android:id="@+id/login_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         style="@style/BasicButtonStyle"
+        android:onClick="login"
         android:text="Login"
-        android:onClick="login"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/logout_button"
         style="@style/BasicButtonStyle"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/login_button"
+        android:onClick="logout"
         android:text="Logout"
-        android:visibility="invisible"
-        android:onClick="logout"/>
+        app:layout_constraintStart_toEndOf="@id/login_button"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/username_view"
+        android:id="@+id/current_user"
+        style="@style/BasicTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"/>
+        app:layout_constraintBottom_toBottomOf="@id/logout_button"
+        app:layout_constraintStart_toEndOf="@id/logout_button"
+        app:layout_constraintTop_toTopOf="@id/logout_button"
+        tools:text="username"/>
+
 
     <Button
         android:id="@+id/list_all_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_button"
         style="@style/BasicButtonStyle"
+        android:onClick="listAll"
         android:text="List all items"
-        android:onClick="listAll"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_button" />
 
     <Button
         android:id="@+id/search_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/list_all_button"
         style="@style/BasicButtonStyle"
-        android:text="Search for items"
         android:onClick="search"
-         />
+        android:text="Search for items"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/list_all_button" />
 
     <Button
         android:id="@+id/add_item_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_button"
         style="@style/BasicButtonStyle"
+        android:onClick="addItem"
         android:text="Add an item"
-        android:onClick="addItem"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
