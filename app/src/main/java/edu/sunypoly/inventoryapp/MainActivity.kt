@@ -4,33 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.microsoft.identity.client.IAccount
 import com.microsoft.identity.client.IPublicClientApplication
 import com.microsoft.identity.client.ISingleAccountPublicClientApplication
 import com.microsoft.identity.client.PublicClientApplication
 import com.microsoft.identity.client.exception.MsalException
 import kotlinx.android.synthetic.main.activity_main.*
-
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
-import com.google.android.gms.common.util.IOUtils.toByteArray
-import android.provider.SyncStateContract.Helpers.update
-import android.content.pm.PackageManager
-import android.content.pm.PackageInfo
-import android.R.string.no
-import android.R.attr.name
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.util.Base64
-import android.util.Log
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 
 
 /**
@@ -51,21 +34,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        /*// Add code to print out the key hash
-        try {
-            val info = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
-            for (signature in info.signatures) {
-                val md = MessageDigest.getInstance("SHA")
-                md.update(signature.toByteArray())
-                Log.e("MY KEY HASH:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
-            }
-        } catch (e: PackageManager.NameNotFoundException) {
-
-        } catch (e: NoSuchAlgorithmException) {
-
-        }*/
-
 
         authenticator = Authenticator.instance //Authenticator is a singleton, so this is the way to access it
 
