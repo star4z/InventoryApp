@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutionException
 /**
  * Handles all the server stuff
  */
+//TODO: should be converted to an object
 class Authenticator//Private constructor is used to make the class a singleton
 private constructor() {
     //Used for nicer Log calls
