@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity() {
 
         authenticator = Authenticator.instance //Authenticator is a singleton, so this is the way to access it
 
+        authenticator?.login("", "")
+
 //        val applicationCreatedListener = object : IPublicClientApplication.ISingleAccountApplicationCreatedListener {
 //            override fun onCreated(application: ISingleAccountPublicClientApplication) {
 //                /**
@@ -171,6 +173,18 @@ class MainActivity : AppCompatActivity() {
                 }
             })*/
         })
+
+        list_all_button.setOnClickListener {
+            startActivity(Intent(this, ListAllItemsActivity::class.java))
+        }
+
+        search_button.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
+
+        add_item_button.setOnClickListener {
+            startActivity(Intent(this, AddItemActivity::class.java))
+        }
     }
 
    /* private fun loadAccount() {
