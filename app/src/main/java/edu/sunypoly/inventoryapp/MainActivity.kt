@@ -8,10 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
-
 /**
  * This is the activity that is started when the app starts.
  */
