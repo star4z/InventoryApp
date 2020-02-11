@@ -2,12 +2,10 @@ package edu.sunypoly.inventoryapp
 
 import android.app.Activity
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 import java.io.IOException
@@ -18,6 +16,8 @@ import java.net.URL
  * This is the activity that is started when the app starts.
  */
 class MainActivity : AppCompatActivity() {
+    private val TAG = MainActivity::class.java.simpleName
+
     private var authenticator: Authenticator? = null //class which handles talking to the server
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,12 +26,23 @@ class MainActivity : AppCompatActivity() {
 
         authenticator = Authenticator.instance //Authenticator is a singleton, so this is the way to access it
 
-        //If the user is logged in, shows the logout button
-        if (authenticator!!.isLoggedIn){
-            logout_button.visibility = View.VISIBLE
-        }
+        updateUI(false)
+
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        initializeUI()
+    }
+
+    private fun initializeUI() {
+        login_button.setOnClickListener {
+            //TODO: add login logic
+            authenticator?.login("", "")
+            updateUI(true)
+        }
+    }
 
     /**
      * This is called when an activity that was started with startActivityForResult() returns
@@ -46,56 +57,41 @@ class MainActivity : AppCompatActivity() {
                 logout_button.visibility = View.VISIBLE
             }
         }
-    }
 
-    /**
-     * Called when login button is clicked (onClick="login" in R.layout.activity_main.xml)
-     * starts LoginActivity
-     */
-    fun login(view: View) {
-        startActivityForResult(Intent(this, LoginActivity::class.java), 0)
-    }
+        logout_button.setOnClickListener {
+            updateUI(false)
+        }
 
-    /**
-     * Logs the user out (via Authenticator) and updates the UI appropriately when logout button is pressed
-     */
-    fun logout(view: View){
-        authenticator!!.logout()
-        Toast.makeText(this, "Logged out.", Toast.LENGTH_LONG).show()
-        logout_button.visibility = View.INVISIBLE
-        username_view.visibility = View.INVISIBLE
-    }
+        list_all_button.setOnClickListener {
+            startActivity(Intent(this, ListAllItemsActivity::class.java))
+        }
 
-    /**
-     * starts ListAllItemsActivity when List all button is pressed
-     */
-    fun listAll(view: View) {
-        startActivityIfLoggedIn(ListAllItemsActivity::class.java)
-    }
+        search_button.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
 
-    /**
-     * starts SearchActivity when search button is pressed
-     */
-    fun search(view: View) {
-        startActivityIfLoggedIn(SearchActivity::class.java)
-    }
-
-    /**
-     * Starts AddItemActivity when Add item button is pressed
-     */
-    fun addItem(view: View) {
-        startActivityIfLoggedIn(AddItemActivity::class.java)
-    }
-
-    /**
-     * Generalized method that ensures the user is logged in before they can do stuff
-     */
-    fun <T> startActivityIfLoggedIn(c: Class<T>){
-        if (authenticator!!.isLoggedIn) {
-            startActivity(Intent(this, c))
-        } else {
-            Toast.makeText(this, "You need to be logged in to perform that action.", Toast.LENGTH_LONG).show()
+        add_item_button.setOnClickListener {
+            startActivity(Intent(this, AddItemActivity::class.java))
         }
     }
 
+    /**
+     * Updates UI based on the current account.
+     */
+    private fun updateUI(loggedIn: Boolean) {
+
+        if (loggedIn) {
+            logout_button.isEnabled = true
+            login_button.isEnabled = false
+            list_all_button.isEnabled = true
+            search_button.isEnabled = true
+            add_item_button.isEnabled = true
+        } else {
+            logout_button.isEnabled = false
+            login_button.isEnabled = true
+            list_all_button.isEnabled = false
+            search_button.isEnabled = false
+            add_item_button.isEnabled = false
+        }
+    }
 }

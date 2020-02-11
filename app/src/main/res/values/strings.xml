@@ -16,4 +16,44 @@
     <string name="barcode_error">"Error reading barcode: %1$s"</string>
     <string name="grant">GRANT</string>
     <string name="cancel">CANCEL</string>
+
+    <!--
+   ! Strings used by the ServerInstance class.
+   -->
+    <string name="server_instance_err_empty_id">
+    The server ID must be a non-empty string.
+  </string>
+
+    <string name="server_instance_err_empty_address">
+    The server address must be a non-empty string.
+  </string>
+
+    <string name="server_instance_err_invalid_port">
+    The server port must be an integer between 1 and 65535.
+  </string>
+
+    <string name="server_instance_err_cannot_combine_ssl_and_start_tls">
+    SSL and StartTLS cannot be used together.
+  </string>
+
+    <string name="server_instance_err_mismatched_bind_dn_and_pw">
+    The bind DN and bind password must be either both null or both non-null.
+  </string>
+
+    <string name="server_instance_err_invalid_bind_dn">
+    The bind DN appears to be invalid:  %s
+  </string>
+
+    <string name="server_instance_err_invalid_base_dn">
+    The base DN appears to be invalid:  %s
+  </string>
+
+    <string name="server_instance_err_cannot_initialize_ssl">
+    An error occurred while attempting to initialize the SSL socket factory:
+    %s
+  </string>
+
+    <string name="server_instance_err_start_tls_failed">
+    An error occurred while attempting to perform StartTLS negotiation:  %s
+  </string>
 </resources>
