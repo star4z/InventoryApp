@@ -226,7 +226,7 @@ private constructor() {
                     val inventoryItems = gson.fromJson(input, Array<InventoryItem>::class.java)
 
                     return if (inventoryItems != null) {
-                        AuthenticatorStatus.ListStatus("Successfully got items.", ArrayList(Arrays.asList(*inventoryItems)))
+                        AuthenticatorStatus.ListStatus("Successfully got items.", ArrayList(listOf(*inventoryItems)))
                     } else {
                         AuthenticatorStatus.NoItems
                     }

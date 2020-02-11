@@ -32,17 +32,5 @@
         </activity>
         <activity android:name=".BarcodeActivity" />
         <activity android:name=".barcode_reader.BarcodeReaderActivity" />
-        <!--Intent filter to catch Microsoft's callback after Sign In-->
-        <activity android:name="com.microsoft.identity.client.BrowserTabActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="edu.sunypoly.inventoryapp"
-                    android:path="/ObJ+QUtrUrTJBkLYoSbPzbXT1Go="
-    			    android:scheme="msauth" />
-    	</intent-filter>
-    </activity>
     </application>
 </manifest>

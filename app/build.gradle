@@ -39,8 +39,6 @@ dependencies {
     api 'com.google.android.gms:play-services-vision:19.0.0'
     implementation 'com.android.volley:volley:1.1.1'
 
-    implementation 'net.openid:appauth:0.7.1'
-
 }
 
 repositories {
