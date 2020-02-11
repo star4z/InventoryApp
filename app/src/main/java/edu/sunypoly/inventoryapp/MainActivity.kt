@@ -18,9 +18,6 @@ import java.net.URL
  * This is the activity that is started when the app starts.
  */
 class MainActivity : AppCompatActivity() {
-    private lateinit var prefs: SharedPreferences //File type for storing settings (mostly)
-    private var username: String? = null
-    private var password: String? = null
     private var authenticator: Authenticator? = null //class which handles talking to the server
 
     override fun onCreate(savedInstanceState: Bundle?) {
