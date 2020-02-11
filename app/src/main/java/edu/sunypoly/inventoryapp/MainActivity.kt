@@ -33,13 +33,6 @@ class MainActivity : AppCompatActivity() {
         if (authenticator!!.isLoggedIn){
             logout_button.visibility = View.VISIBLE
         }
-
-
-        //This is unused; supposed to be a way to store password without logging in every time, but this was decided to not be a feature
-        prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        username = prefs.getString("username", null)
-        password = prefs.getString("password", null)
-
     }
 
 
